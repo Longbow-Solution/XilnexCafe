@@ -213,16 +213,6 @@
     <Compile Include="API\ApiFunc.cs" />
     <Compile Include="API\ApiModel.cs" />
     <Compile Include="API\ApiRequest.cs" />
-    <Compile Include="API\API_Copy\Branch.cs" />
-    <Compile Include="API\API_Copy\Delivery.cs" />
-    <Compile Include="API\API_Copy\GeneralFunc.cs" />
-    <Compile Include="API\API_Copy\Image.cs" />
-    <Compile Include="API\API_Copy\Kiosk.cs" />
-    <Compile Include="API\API_Copy\Loyalty.cs" />
-    <Compile Include="API\API_Copy\Menu.cs" />
-    <Compile Include="API\API_Copy\ResponseBase.cs" />
-    <Compile Include="API\API_Copy\Reward.cs" />
-    <Compile Include="API\API_Copy\Support.cs" />
     <Compile Include="Helper\BoolToVisibilityConverter.cs" />
     <Compile Include="Helper\BoolToVisibilityConverterKeyboard.cs" />
     <Compile Include="Helper\CCIDHelper.cs" />
@@ -483,7 +473,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Resource Include="Resource\Icon\favicon.png" />
-    <Compile Include="API\API_Copy\Order.cs" />
     <Resource Include="Resource\Image\active-cart.png" />
     <Resource Include="Resource\Image\AliPay.png" />
     <Resource Include="Resource\Image\banner.png" />

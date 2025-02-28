@@ -32,7 +32,6 @@ using CFSSK.Helper;
 using System.Text.RegularExpressions;
 using Helper;
 using CFSSK.API;
-using AnWRestAPI.Models;
 using EDC_Serial_Lib.MessageResp;
 using EDC_Serial_Lib.MessageType;
 using static CFSSK.Helper.RazerPayIntegration;
@@ -626,41 +625,17 @@ namespace CFSSK.ViewModel
             }
         }
 
-        private List<Kiosk.KioskPaymentType> _KioskPaymentType;
+        //private List<Kiosk.KioskPaymentType> _KioskPaymentType;
 
-        public List<Kiosk.KioskPaymentType> KioskPaymentType
-        {
-            get { return _KioskPaymentType; }
-            set
-            {
-                _KioskPaymentType = value;
-                OnPropertyChanged(nameof(PaymentType));
-            }
-        }
-
-        private List<Kiosk.MenuMbaItem> _MenuMba;
-
-        public List<Kiosk.MenuMbaItem> MenuMba
-        {
-            get { return _MenuMba; }
-            set
-            {
-                _MenuMba = value;
-                OnPropertyChanged(nameof(MenuMba));
-            }
-        }
-
-        private List<AnWRestAPI.Models.Order.PaymentTypeList> _KioskPaymentList;
-
-        public List<AnWRestAPI.Models.Order.PaymentTypeList> KioskPaymentList
-        {
-            get { return _KioskPaymentList; }
-            set
-            {
-                _KioskPaymentList = value;
-                OnPropertyChanged(nameof(KioskPaymentList));
-            }
-        }
+        //public List<Kiosk.KioskPaymentType> KioskPaymentType
+        //{
+        //    get { return _KioskPaymentType; }
+        //    set
+        //    {
+        //        _KioskPaymentType = value;
+        //        OnPropertyChanged(nameof(PaymentType));
+        //    }
+        //}
 
         private ObservableCollection<CartModel.Product> _CartList;
 
@@ -3627,15 +3602,15 @@ Batch Amount: {5}
 
         #region CFSSK Common Function
 
-        public List<Order.OrderRequest> orderRequests;
+        //public List<Order.OrderRequest> orderRequests;
         public List<BillListModel> mBillList;
         string printingRemarks = string.Empty;
         bool isCardPayment = false;
         public int CustomerID;
         public string AccessToken;
         public int eatMethod;
-        Order.OrderRequest orderRequest;
-        Order.OrderPayment payment;
+        ApiModel.FnBOrders.Request orderRequest;
+        //Order.OrderPayment payment;
         string paymentCode = string.Empty;
         int paymentId;
 
@@ -3811,21 +3786,9 @@ Batch Amount: {5}
             }
         }
 
-        private List<Order.OrderReward> _Voucher;
+        private List<ApiModel.FnBOrders.Response.SalesItem> _Order;
 
-        public List<Order.OrderReward> Voucher
-        {
-            get { return _Voucher; }
-            set
-            {
-                _Voucher = value;
-                OnPropertyChanged(nameof(Voucher));
-            }
-        }
-
-        private List<Order.OrderMenuList> _Order;
-
-        public List<Order.OrderMenuList> Order
+        public List<ApiModel.FnBOrders.Response.SalesItem> Order
         {
             get { return _Order; }
             set
@@ -4567,7 +4530,7 @@ Batch Amount: {5}
 
                     CartList = null;
                     CartList = new ObservableCollection<CartModel.Product>();
-                    Voucher = new List<Order.OrderReward>();
+                    //Voucher = new List<Order.OrderReward>();
 
                     try
                     {
@@ -5266,44 +5229,10 @@ Batch Amount: {5}
 
                 GetLastestOrderList();
 
-                orderRequest = new Order.OrderRequest
+                orderRequest =new ApiModel.FnBOrders.Request 
                         (
-                            0,
-                            0,
-                            CustomerID,
-                            CustomerPhoneNo,
-                            GeneralVar.BranchId,
-                            0,
-                            eatMethod,
-                            timenow,
-                            timenow,
-                            dateTime,
-                            string.Empty,
-                            false,
-                            string.Empty,
-                            paymentCode,//payment code,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            0,
-                            CustomerID.ToString(),
-                            AccessToken,
-                            string.Empty,
-                            string.Empty,
-                            0,
-                            0,
-                            Order,
-                            payment,
-                            Voucher
+                            
                             );
-
-                orderRequest.CalculatePayment();
 
                 //CartItem = CartList.Select(x => x.ItemCurrentQty).Sum();
 
@@ -5313,9 +5242,6 @@ Batch Amount: {5}
                 //CartItem = Order.Sum(x => x.quantity);
                 //TotalAmount = orderRequest.subTotal;
                 AnWTotalAmount = CartList.Sum(x => x.ItemTotalPrice);
-                AnWVoucherAmount = Convert.ToDouble(orderRequest.discount);
-                AnWGiftVoucher = Convert.ToDouble(orderRequest.tenderTotal);
-                AnWRounding = Convert.ToDouble(orderRequest.rounding);
                 AnWTax = Convert.ToDouble(TotalAmount) * 0.06;
 
                 Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger CalculateTotalItem Done ..."), _TraceCategory);
@@ -6991,295 +6917,295 @@ Batch Amount: {5}
             }
         }
 
-        public bool VoucherApiAction(bool isPromoCode, string voucherId, string promoCodeValue, int orderTypeId, string branchId, List<Order.OrderReward> voucherList, List<Order.OrderMenuList> orderList, int customerId, string accessToken, int componentId, string componentUniqueId)
-        {
-            bool success = false;
-            try
-            {
-                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger VoucherApiAction Starting ..."), _TraceCategory);
+        //public bool VoucherApiAction(bool isPromoCode, string voucherId, string promoCodeValue, int orderTypeId, string branchId, List<Order.OrderReward> voucherList, List<Order.OrderMenuList> orderList, int customerId, string accessToken, int componentId, string componentUniqueId)
+        //{
+        //    bool success = false;
+        //    try
+        //    {
+        //        Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger VoucherApiAction Starting ..."), _TraceCategory);
 
-                //ApiModel.ReadPromotion.Request req = null;
-                //req = new ApiModel.ReadPromotion.Request(isPromoCode, voucherId, promoCodeValue, orderTypeId, branchId, voucherList, orderList, customerId, accessToken, componentId, componentUniqueId);
+        //        //ApiModel.ReadPromotion.Request req = null;
+        //        //req = new ApiModel.ReadPromotion.Request(isPromoCode, voucherId, promoCodeValue, orderTypeId, branchId, voucherList, orderList, customerId, accessToken, componentId, componentUniqueId);
 
-                //if (_ApiFunc.ReadPromotion(req, out ApiModel.ReadPromotion.Response res))
-                //{
-                //    if (res != null)
-                //    {
-                //        if (res.Code.Equals("00"))
-                //        {
-                //            //if promotion wont return menu item promotion
-                //            //if item voucher will return both
-                //            if (res.VoucherItem != null)
-                //            {
-                //                if(res.VoucherItem.rewardItemType.ToUpper()== "EmployeeVoucher".ToUpper())
-                //                {
-                //                    if(String.IsNullOrEmpty(res.VoucherItem.itemCode))
-                //                    {
-                //                        Voucher.Add(new Order.OrderReward
-                //                        {
-                //                            rewardTxId = res.VoucherItem.rewardTxId,
-                //                            rewardSuperId = res.VoucherItem.rewardSuperId,
-                //                            rewardType = res.VoucherItem.rewardType,
-                //                            rewardItemType = res.VoucherItem.rewardItemType,
-                //                            qty = res.VoucherItem.qty,
-                //                            rewardName = res.VoucherItem.rewardName,
-                //                            rewardCode = res.VoucherItem.rewardCode,
-                //                            promoCode = res.VoucherItem.promoCode,
-                //                            uniqueCode = res.VoucherItem.uniqueCode,
-                //                            amount = res.VoucherItem.amount,
-                //                            percentage = res.VoucherItem.percentage,
-                //                            maxAmount = res.VoucherItem.maxAmount,
-                //                            itemTxId = res.VoucherItem.itemTxId,
-                //                            itemCatId = res.VoucherItem.itemCatId,
-                //                            itemId = res.VoucherItem.itemId,
-                //                            itemCode = res.VoucherItem.rewardCode,
-                //                            itemName = res.VoucherItem.itemName,
-                //                            itemPrice = res.VoucherItem.itemPrice,
-                //                            itemTax = res.VoucherItem.itemTax,
-                //                            isVoucher = res.VoucherItem.isVoucher,
-                //                            isPromoCode = res.VoucherItem.isPromoCode,
-                //                            isDiscount = res.VoucherItem.isDiscount,
-                //                            isItem = res.VoucherItem.isItem
-                //                        });
-                //                    }
-                //                    else
-                //                    {
-                //                        Voucher.Add(new Order.OrderReward
-                //                        {
-                //                            rewardTxId = res.VoucherItem.rewardTxId,
-                //                            rewardSuperId = res.VoucherItem.rewardSuperId,
-                //                            rewardType = res.VoucherItem.rewardType,
-                //                            rewardItemType = res.VoucherItem.rewardItemType,
-                //                            qty = res.VoucherItem.qty,
-                //                            rewardName = res.VoucherItem.rewardName,
-                //                            rewardCode = res.VoucherItem.rewardCode,
-                //                            promoCode = res.VoucherItem.promoCode,
-                //                            uniqueCode = res.VoucherItem.uniqueCode,
-                //                            amount = res.VoucherItem.amount,
-                //                            percentage = res.VoucherItem.percentage,
-                //                            maxAmount = res.VoucherItem.maxAmount,
-                //                            itemTxId = res.VoucherItem.itemTxId,
-                //                            itemCatId = res.VoucherItem.itemCatId,
-                //                            itemId = res.VoucherItem.itemId,
-                //                            itemCode = res.VoucherItem.itemCode,
-                //                            itemName = res.VoucherItem.itemName,
-                //                            itemPrice = res.VoucherItem.itemPrice,
-                //                            itemTax = res.VoucherItem.itemTax,
-                //                            isVoucher = res.VoucherItem.isVoucher,
-                //                            isPromoCode = res.VoucherItem.isPromoCode,
-                //                            isDiscount = res.VoucherItem.isDiscount,
-                //                            isItem = res.VoucherItem.isItem
-                //                        });
-                //                    }
-                //                }
-                //                else
-                //                {
-                //                    Voucher.Add(new Order.OrderReward
-                //                    {
-                //                        rewardTxId = res.VoucherItem.rewardTxId,
-                //                        rewardSuperId = res.VoucherItem.rewardSuperId,
-                //                        rewardType = res.VoucherItem.rewardType,
-                //                        rewardItemType = res.VoucherItem.rewardItemType,
-                //                        qty = res.VoucherItem.qty,
-                //                        rewardName = res.VoucherItem.rewardName,
-                //                        rewardCode = res.VoucherItem.rewardCode,
-                //                        promoCode = res.VoucherItem.promoCode,
-                //                        uniqueCode = res.VoucherItem.uniqueCode,
-                //                        amount = res.VoucherItem.amount,
-                //                        percentage = res.VoucherItem.percentage,
-                //                        maxAmount = res.VoucherItem.maxAmount,
-                //                        itemTxId = res.VoucherItem.itemTxId,
-                //                        itemCatId = res.VoucherItem.itemCatId,
-                //                        itemId = res.VoucherItem.itemId,
-                //                        itemCode = res.VoucherItem.itemCode,
-                //                        itemName = res.VoucherItem.itemName,
-                //                        itemPrice = res.VoucherItem.itemPrice,
-                //                        itemTax = res.VoucherItem.itemTax,
-                //                        isVoucher = res.VoucherItem.isVoucher,
-                //                        isPromoCode = res.VoucherItem.isPromoCode,
-                //                        isDiscount = res.VoucherItem.isDiscount,
-                //                        isItem = res.VoucherItem.isItem
-                //                    });
-                //                }
-                //            }
+        //        //if (_ApiFunc.ReadPromotion(req, out ApiModel.ReadPromotion.Response res))
+        //        //{
+        //        //    if (res != null)
+        //        //    {
+        //        //        if (res.Code.Equals("00"))
+        //        //        {
+        //        //            //if promotion wont return menu item promotion
+        //        //            //if item voucher will return both
+        //        //            if (res.VoucherItem != null)
+        //        //            {
+        //        //                if(res.VoucherItem.rewardItemType.ToUpper()== "EmployeeVoucher".ToUpper())
+        //        //                {
+        //        //                    if(String.IsNullOrEmpty(res.VoucherItem.itemCode))
+        //        //                    {
+        //        //                        Voucher.Add(new Order.OrderReward
+        //        //                        {
+        //        //                            rewardTxId = res.VoucherItem.rewardTxId,
+        //        //                            rewardSuperId = res.VoucherItem.rewardSuperId,
+        //        //                            rewardType = res.VoucherItem.rewardType,
+        //        //                            rewardItemType = res.VoucherItem.rewardItemType,
+        //        //                            qty = res.VoucherItem.qty,
+        //        //                            rewardName = res.VoucherItem.rewardName,
+        //        //                            rewardCode = res.VoucherItem.rewardCode,
+        //        //                            promoCode = res.VoucherItem.promoCode,
+        //        //                            uniqueCode = res.VoucherItem.uniqueCode,
+        //        //                            amount = res.VoucherItem.amount,
+        //        //                            percentage = res.VoucherItem.percentage,
+        //        //                            maxAmount = res.VoucherItem.maxAmount,
+        //        //                            itemTxId = res.VoucherItem.itemTxId,
+        //        //                            itemCatId = res.VoucherItem.itemCatId,
+        //        //                            itemId = res.VoucherItem.itemId,
+        //        //                            itemCode = res.VoucherItem.rewardCode,
+        //        //                            itemName = res.VoucherItem.itemName,
+        //        //                            itemPrice = res.VoucherItem.itemPrice,
+        //        //                            itemTax = res.VoucherItem.itemTax,
+        //        //                            isVoucher = res.VoucherItem.isVoucher,
+        //        //                            isPromoCode = res.VoucherItem.isPromoCode,
+        //        //                            isDiscount = res.VoucherItem.isDiscount,
+        //        //                            isItem = res.VoucherItem.isItem
+        //        //                        });
+        //        //                    }
+        //        //                    else
+        //        //                    {
+        //        //                        Voucher.Add(new Order.OrderReward
+        //        //                        {
+        //        //                            rewardTxId = res.VoucherItem.rewardTxId,
+        //        //                            rewardSuperId = res.VoucherItem.rewardSuperId,
+        //        //                            rewardType = res.VoucherItem.rewardType,
+        //        //                            rewardItemType = res.VoucherItem.rewardItemType,
+        //        //                            qty = res.VoucherItem.qty,
+        //        //                            rewardName = res.VoucherItem.rewardName,
+        //        //                            rewardCode = res.VoucherItem.rewardCode,
+        //        //                            promoCode = res.VoucherItem.promoCode,
+        //        //                            uniqueCode = res.VoucherItem.uniqueCode,
+        //        //                            amount = res.VoucherItem.amount,
+        //        //                            percentage = res.VoucherItem.percentage,
+        //        //                            maxAmount = res.VoucherItem.maxAmount,
+        //        //                            itemTxId = res.VoucherItem.itemTxId,
+        //        //                            itemCatId = res.VoucherItem.itemCatId,
+        //        //                            itemId = res.VoucherItem.itemId,
+        //        //                            itemCode = res.VoucherItem.itemCode,
+        //        //                            itemName = res.VoucherItem.itemName,
+        //        //                            itemPrice = res.VoucherItem.itemPrice,
+        //        //                            itemTax = res.VoucherItem.itemTax,
+        //        //                            isVoucher = res.VoucherItem.isVoucher,
+        //        //                            isPromoCode = res.VoucherItem.isPromoCode,
+        //        //                            isDiscount = res.VoucherItem.isDiscount,
+        //        //                            isItem = res.VoucherItem.isItem
+        //        //                        });
+        //        //                    }
+        //        //                }
+        //        //                else
+        //        //                {
+        //        //                    Voucher.Add(new Order.OrderReward
+        //        //                    {
+        //        //                        rewardTxId = res.VoucherItem.rewardTxId,
+        //        //                        rewardSuperId = res.VoucherItem.rewardSuperId,
+        //        //                        rewardType = res.VoucherItem.rewardType,
+        //        //                        rewardItemType = res.VoucherItem.rewardItemType,
+        //        //                        qty = res.VoucherItem.qty,
+        //        //                        rewardName = res.VoucherItem.rewardName,
+        //        //                        rewardCode = res.VoucherItem.rewardCode,
+        //        //                        promoCode = res.VoucherItem.promoCode,
+        //        //                        uniqueCode = res.VoucherItem.uniqueCode,
+        //        //                        amount = res.VoucherItem.amount,
+        //        //                        percentage = res.VoucherItem.percentage,
+        //        //                        maxAmount = res.VoucherItem.maxAmount,
+        //        //                        itemTxId = res.VoucherItem.itemTxId,
+        //        //                        itemCatId = res.VoucherItem.itemCatId,
+        //        //                        itemId = res.VoucherItem.itemId,
+        //        //                        itemCode = res.VoucherItem.itemCode,
+        //        //                        itemName = res.VoucherItem.itemName,
+        //        //                        itemPrice = res.VoucherItem.itemPrice,
+        //        //                        itemTax = res.VoucherItem.itemTax,
+        //        //                        isVoucher = res.VoucherItem.isVoucher,
+        //        //                        isPromoCode = res.VoucherItem.isPromoCode,
+        //        //                        isDiscount = res.VoucherItem.isDiscount,
+        //        //                        isItem = res.VoucherItem.isItem
+        //        //                    });
+        //        //                }
+        //        //            }
 
-                //            if (res.MenuItemPromotion != null)
-                //            {
-                //                int itemQueue;
-                //                if (CartList.Count() == 0)
-                //                {
-                //                    itemQueue = 1;
-                //                }
-                //                else
-                //                    itemQueue = CartList.Max(x => x.cartMenuNo) + 1;
+        //        //            if (res.MenuItemPromotion != null)
+        //        //            {
+        //        //                int itemQueue;
+        //        //                if (CartList.Count() == 0)
+        //        //                {
+        //        //                    itemQueue = 1;
+        //        //                }
+        //        //                else
+        //        //                    itemQueue = CartList.Max(x => x.cartMenuNo) + 1;
 
-                //                Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
-                //                {
-                //                    string menuFileName = string.Empty;
-                //                    BitmapImage menuImagePath = new BitmapImage();
-                //                    if (!string.IsNullOrEmpty(res.MenuItemPromotion.img))
-                //                    {
-                //                        try
-                //                        {
-                //                            menuFileName = res.MenuItemPromotion.img.Substring(res.MenuItemPromotion.img.LastIndexOf('/') + 1);
-                //                            if (GeneralFunc.DownloadMedia(GeneralVar.MenuRepository, menuFileName, res.MenuItemPromotion.img))
-                //                            {
-                //                                string loc = Path.Combine(GeneralVar.MenuRepository, menuFileName);
-                //                                menuImagePath = FilePathToBitmapImage(loc);
-                //                            }
-                //                            else
-                //                            {
-                //                                menuImagePath.BeginInit();
-                //                                menuImagePath.UriSource = new Uri("pack://application:,,,/Resource/LFFImages/AnW_Logo.png", UriKind.RelativeOrAbsolute);
-                //                                menuImagePath.EndInit();
-                //                            }
-                //                        }
-                //                        catch (Exception ex)
-                //                        {
-                //                            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Download image voucher menu : {0}", ex.ToString()), _TraceCategory);
-                //                        }
+        //        //                Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+        //        //                {
+        //        //                    string menuFileName = string.Empty;
+        //        //                    BitmapImage menuImagePath = new BitmapImage();
+        //        //                    if (!string.IsNullOrEmpty(res.MenuItemPromotion.img))
+        //        //                    {
+        //        //                        try
+        //        //                        {
+        //        //                            menuFileName = res.MenuItemPromotion.img.Substring(res.MenuItemPromotion.img.LastIndexOf('/') + 1);
+        //        //                            if (GeneralFunc.DownloadMedia(GeneralVar.MenuRepository, menuFileName, res.MenuItemPromotion.img))
+        //        //                            {
+        //        //                                string loc = Path.Combine(GeneralVar.MenuRepository, menuFileName);
+        //        //                                menuImagePath = FilePathToBitmapImage(loc);
+        //        //                            }
+        //        //                            else
+        //        //                            {
+        //        //                                menuImagePath.BeginInit();
+        //        //                                menuImagePath.UriSource = new Uri("pack://application:,,,/Resource/LFFImages/AnW_Logo.png", UriKind.RelativeOrAbsolute);
+        //        //                                menuImagePath.EndInit();
+        //        //                            }
+        //        //                        }
+        //        //                        catch (Exception ex)
+        //        //                        {
+        //        //                            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Download image voucher menu : {0}", ex.ToString()), _TraceCategory);
+        //        //                        }
                                         
-                //                    }
+        //        //                    }
 
-                //                    ObservableCollection<CartModel.ModifierTypeDetails> tempDetail = new ObservableCollection<CartModel.ModifierTypeDetails>();
+        //        //                    ObservableCollection<CartModel.ModifierTypeDetails> tempDetail = new ObservableCollection<CartModel.ModifierTypeDetails>();
 
-                //                    CartList.Add(new CartModel.MenuDetails
-                //                            (itemQueue,
-                //                            0,
-                //                            null,
-                //                            null,
-                //                            Convert.ToInt32(res.MenuItemPromotion.itemId),
-                //                            res.MenuItemPromotion.itemTemplateId,
-                //                            res.MenuItemPromotion.itemCategoryId,
-                //                            res.MenuItemPromotion.itemType,
-                //                            res.MenuItemPromotion.itemName,
-                //                            res.MenuItemPromotion.itemDesc,
-                //                            res.MenuItemPromotion.img,
-                //                            menuImagePath,//need to fix
-                //                            Convert.ToDouble(res.MenuItemPromotion.originalPrice),
-                //                            Convert.ToDouble(res.MenuItemPromotion.price),
-                //                            Convert.ToDouble(res.MenuItemPromotion.priceWOTax),
-                //                            Convert.ToDouble(res.MenuItemPromotion.tax),
-                //                            0,
-                //                            res.MenuItemPromotion.itemCode,
-                //                            "",
-                //                            true,
-                //                            false,
-                //                            menuFileName,
-                //                            tempDetail,
-                //                            res.MenuItemPromotion.quantity,
-                //                            Convert.ToDouble(res.MenuItemPromotion.price),
-                //                            Convert.ToDouble(res.MenuItemPromotion.price),
-                //                            res.MenuItemPromotion.orderModifiertypes.Select(x => new CartModel.ModifierTypeDetails
-                //                            {
-                //                                modifierId = x.modifierId,
-                //                                name = x.name,
-                //                                qty = 1,
-                //                                price = Convert.ToDouble(x.orderModifiers.Where(a => a.modifierId == x.modifierId).Select(b => b.price).FirstOrDefault()),
-                //                                ordermodifiers = x.orderModifiers.Select(y => new CartModel.ModifiersDetails
-                //                                {
-                //                                    modifierId = y.modifierId,
-                //                                    name = y.name,
-                //                                    qty = y.qty,
-                //                                    price = Convert.ToDouble(y.price),
-                //                                    priceWOTax = Convert.ToDouble(y.priceWOTax),
-                //                                    tax = Convert.ToDouble(y.tax),
-                //                                    isFoc = y.isFoc,
-                //                                    ModiImg = Path.Combine(GeneralVar.MenuRepository, string.Format("{0}", y.modifierId))
-                //                                }).ToList()
-                //                            }).ToList(),
-                //                            null,
-                //                            null,
-                //                            res.MenuItemPromotion.redeemId,
-                //                            res.MenuItemPromotion.redeemTxId,
-                //                            res.MenuItemPromotion.isFixed,
-                //                            res.MenuItemPromotion.isReward,
-                //                            string.Empty
-                //                            ));
-                //                }));
+        //        //                    CartList.Add(new CartModel.MenuDetails
+        //        //                            (itemQueue,
+        //        //                            0,
+        //        //                            null,
+        //        //                            null,
+        //        //                            Convert.ToInt32(res.MenuItemPromotion.itemId),
+        //        //                            res.MenuItemPromotion.itemTemplateId,
+        //        //                            res.MenuItemPromotion.itemCategoryId,
+        //        //                            res.MenuItemPromotion.itemType,
+        //        //                            res.MenuItemPromotion.itemName,
+        //        //                            res.MenuItemPromotion.itemDesc,
+        //        //                            res.MenuItemPromotion.img,
+        //        //                            menuImagePath,//need to fix
+        //        //                            Convert.ToDouble(res.MenuItemPromotion.originalPrice),
+        //        //                            Convert.ToDouble(res.MenuItemPromotion.price),
+        //        //                            Convert.ToDouble(res.MenuItemPromotion.priceWOTax),
+        //        //                            Convert.ToDouble(res.MenuItemPromotion.tax),
+        //        //                            0,
+        //        //                            res.MenuItemPromotion.itemCode,
+        //        //                            "",
+        //        //                            true,
+        //        //                            false,
+        //        //                            menuFileName,
+        //        //                            tempDetail,
+        //        //                            res.MenuItemPromotion.quantity,
+        //        //                            Convert.ToDouble(res.MenuItemPromotion.price),
+        //        //                            Convert.ToDouble(res.MenuItemPromotion.price),
+        //        //                            res.MenuItemPromotion.orderModifiertypes.Select(x => new CartModel.ModifierTypeDetails
+        //        //                            {
+        //        //                                modifierId = x.modifierId,
+        //        //                                name = x.name,
+        //        //                                qty = 1,
+        //        //                                price = Convert.ToDouble(x.orderModifiers.Where(a => a.modifierId == x.modifierId).Select(b => b.price).FirstOrDefault()),
+        //        //                                ordermodifiers = x.orderModifiers.Select(y => new CartModel.ModifiersDetails
+        //        //                                {
+        //        //                                    modifierId = y.modifierId,
+        //        //                                    name = y.name,
+        //        //                                    qty = y.qty,
+        //        //                                    price = Convert.ToDouble(y.price),
+        //        //                                    priceWOTax = Convert.ToDouble(y.priceWOTax),
+        //        //                                    tax = Convert.ToDouble(y.tax),
+        //        //                                    isFoc = y.isFoc,
+        //        //                                    ModiImg = Path.Combine(GeneralVar.MenuRepository, string.Format("{0}", y.modifierId))
+        //        //                                }).ToList()
+        //        //                            }).ToList(),
+        //        //                            null,
+        //        //                            null,
+        //        //                            res.MenuItemPromotion.redeemId,
+        //        //                            res.MenuItemPromotion.redeemTxId,
+        //        //                            res.MenuItemPromotion.isFixed,
+        //        //                            res.MenuItemPromotion.isReward,
+        //        //                            string.Empty
+        //        //                            ));
+        //        //                }));
 
-                //            }
+        //        //            }
 
-                //            success = true;
+        //        //            success = true;
 
-                //            if (res.Message != null)
-                //                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger VoucherApiAction : {0}", res.Message.ToString()), _TraceCategory);
-                //        }
-                //        else if (res.Code.Equals("01") || res.Code.Equals("10"))
-                //        {
-                //            TxtErrorHeader = Lbl_Info;
+        //        //            if (res.Message != null)
+        //        //                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger VoucherApiAction : {0}", res.Message.ToString()), _TraceCategory);
+        //        //        }
+        //        //        else if (res.Code.Equals("01") || res.Code.Equals("10"))
+        //        //        {
+        //        //            TxtErrorHeader = Lbl_Info;
 
-                //            if (res.Message != null)
-                //            {
-                //                TxtErrorMessage = res.Message;
-                //                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger VoucherApiAction : {0}", res.Message.ToString()), _TraceCategory);
-                //            }
-                //            else
-                //            {
-                //                TxtErrorMessage = Lbl_ErrorTryAgain;
-                //                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger VoucherApiAction : Unknown Error"), _TraceCategory);
-                //            }
+        //        //            if (res.Message != null)
+        //        //            {
+        //        //                TxtErrorMessage = res.Message;
+        //        //                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger VoucherApiAction : {0}", res.Message.ToString()), _TraceCategory);
+        //        //            }
+        //        //            else
+        //        //            {
+        //        //                TxtErrorMessage = Lbl_ErrorTryAgain;
+        //        //                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger VoucherApiAction : Unknown Error"), _TraceCategory);
+        //        //            }
 
-                //        }
-                //        else if (res.Code.Equals("99"))
-                //        {
-                //            TxtErrorHeader = Lbl_Info;
-                //            if (res.Message != null)
-                //            {
-                //                TxtErrorMessage = res.Message;
-                //                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[rror] Trigger VoucherApiAction : {0}", res.Message.ToString()), _TraceCategory);
-                //            }
-                //            else
-                //            {
-                //                TxtErrorMessage = Lbl_ErrorTryAgain2;
-                //                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger VoucherApiAction : Unknown Error"), _TraceCategory);
-                //            }
+        //        //        }
+        //        //        else if (res.Code.Equals("99"))
+        //        //        {
+        //        //            TxtErrorHeader = Lbl_Info;
+        //        //            if (res.Message != null)
+        //        //            {
+        //        //                TxtErrorMessage = res.Message;
+        //        //                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[rror] Trigger VoucherApiAction : {0}", res.Message.ToString()), _TraceCategory);
+        //        //            }
+        //        //            else
+        //        //            {
+        //        //                TxtErrorMessage = Lbl_ErrorTryAgain2;
+        //        //                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger VoucherApiAction : Unknown Error"), _TraceCategory);
+        //        //            }
 
-                //        }
-                //        else
-                //        {
-                //            TxtErrorHeader = Lbl_Info;
-                //            if (res.Message != null)
-                //            {
-                //                TxtErrorMessage = res.Message;
-                //                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[rror] Trigger VoucherApiAction : {0}", res.Message.ToString()), _TraceCategory);
-                //            }
-                //            else
-                //            {
-                //                TxtErrorMessage = Lbl_ErrorTryAgain2;
-                //                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger VoucherApiAction : Unknown Error"), _TraceCategory);
-                //            }
-                //        }
+        //        //        }
+        //        //        else
+        //        //        {
+        //        //            TxtErrorHeader = Lbl_Info;
+        //        //            if (res.Message != null)
+        //        //            {
+        //        //                TxtErrorMessage = res.Message;
+        //        //                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[rror] Trigger VoucherApiAction : {0}", res.Message.ToString()), _TraceCategory);
+        //        //            }
+        //        //            else
+        //        //            {
+        //        //                TxtErrorMessage = Lbl_ErrorTryAgain2;
+        //        //                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger VoucherApiAction : Unknown Error"), _TraceCategory);
+        //        //            }
+        //        //        }
 
-                //    }
-                //    else
-                //    {
-                //        TxtErrorHeader = Lbl_Error;
-                //        TxtErrorMessage = Lbl_ErrorTryAgain2;
-                //        VoucherPopupVisibility = Visibility.Collapsed;
-                //        WarningMessageBoxVisibility = BackgroundVisibility = Visibility.Visible;
-                //    }
-                //}
-                //else
-                //{
-                //    TxtErrorHeader = Lbl_Error;
-                //    TxtErrorMessage = Lbl_ErrorTryAgain;
-                //    VoucherPopupVisibility = Visibility.Collapsed;
-                //    WarningMessageBoxVisibility = BackgroundVisibility = Visibility.Visible;
+        //        //    }
+        //        //    else
+        //        //    {
+        //        //        TxtErrorHeader = Lbl_Error;
+        //        //        TxtErrorMessage = Lbl_ErrorTryAgain2;
+        //        //        VoucherPopupVisibility = Visibility.Collapsed;
+        //        //        WarningMessageBoxVisibility = BackgroundVisibility = Visibility.Visible;
+        //        //    }
+        //        //}
+        //        //else
+        //        //{
+        //        //    TxtErrorHeader = Lbl_Error;
+        //        //    TxtErrorMessage = Lbl_ErrorTryAgain;
+        //        //    VoucherPopupVisibility = Visibility.Collapsed;
+        //        //    WarningMessageBoxVisibility = BackgroundVisibility = Visibility.Visible;
 
-                //    Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger VoucherApiAction : Fail to get detail from API"), _TraceCategory);
-                //}
+        //        //    Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger VoucherApiAction : Fail to get detail from API"), _TraceCategory);
+        //        //}
 
-                GeneralVar.MainWindowVM.CalculateTotalItem();
+        //        GeneralVar.MainWindowVM.CalculateTotalItem();
 
-                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger VoucherApiAction Done ..."), _TraceCategory);
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger VoucherApiAction : {0}", ex.ToString()), _TraceCategory);
-            }
-            return success;
-        }
+        //        Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger VoucherApiAction Done ..."), _TraceCategory);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger VoucherApiAction : {0}", ex.ToString()), _TraceCategory);
+        //    }
+        //    return success;
+        //}
 
         public bool GetLastestOrderList()
         {
@@ -7288,48 +7214,90 @@ Batch Amount: {5}
             {
                 Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger GetLastestOrderList Starting ..."), _TraceCategory);
 
-                Order = new List<Order.OrderMenuList>();
+                Order = new List<ApiModel.FnBOrders.Response.SalesItem>();
 
-                //CartList.ToList().ForEach(x => Order.Add(new Order.OrderMenuList(
-                //                x.itemId.ToString(),
-                //                x.itemTemplateId,
-                //                x.itemCategoryId,
-                //                x.itemType,
-                //                x.itemCode,
-                //                x.itemName,
-                //                x.ItemDesc,
-                //                x.img,
-                //                Convert.ToDecimal(x.originalPrice),
-                //                Convert.ToDecimal(x.TempTotalPrice),
-                //                Convert.ToDecimal(x.priceWOTax),
-                //                Convert.ToDecimal(x.tax),
-                //                x.ItemCurrentQty,
-                //                x.redeemId,
-                //                x.redeemTxId,
-                //                x.isFixed,
-                //                x.isReward,
-                //                x.upsellType,
-                //                x.ordermodifiertypes.Where(t => t.ordermodifiers.Where(u => u.IsCheck == true).Count() > 0).Select(y => new Order.OrderModifiertypes
-                //                {
-                //                    modifierId = y.modifierId,
-                //                    name = y.name,
-                //                    qty = y.ordermodifiers.Where(a => a.modifierId == y.ordermodifiers.Where(t => t.IsCheck == true).Select(u => u.modifierId).FirstOrDefault()).Select(b => b.IsCheck).FirstOrDefault() ? 1 : 0,
-                //                    price = Convert.ToDecimal(y.ordermodifiers.Where(a => a.modifierId == y.ordermodifiers.Where(t => t.IsCheck == true).Select(u => u.modifierId).FirstOrDefault()).Select(b => b.price).FirstOrDefault()),
-                //                    orderModifiers = y.ordermodifiers.Where(g => g.IsCheck == true).Select(z => new Order.OrderModifiers
-                //                    {
-                //                        modifierId = z.modifierId,
-                //                        name = z.name,
-                //                        qty = 1,
-                //                        price = Convert.ToDecimal(z.price),
-                //                        priceWOTax = Convert.ToDecimal(z.priceWOTax),
-                //                        tax = Convert.ToDecimal(z.tax)
-                //                    }).ToList()
+                CartList.ToList().ForEach(x =>
+                {
+                    int salesItem = x.itemId;
+                    Order.Add(new ApiModel.FnBOrders.Response.SalesItem(
+                                x.itemId,
+                                x.itemId,
+                                x.itemCode,
+                                x.itemName,
+                                x.ItemCurrentQty,
+                                x.ItemCurrentQty,
+                                x.price,
+                                0,
+                                0,
+                                string.Empty,
+                                false,
+                                string.Empty,
+                                x.ItemTotalPrice,
+                                x.price * 0.06,
+                                x.ItemTotalPrice * 0.06,
+                                true,
+                                "XILNEXBYODSALES",
+                                6,
+                                false,
+                                string.Empty,
+                                string.Empty,
+                                string.Empty,
+                                x.itemType,
+                                string.Empty,
+                                string.Empty,
+                                string.Empty,
+                                string.Empty,
+                                string.Empty,
+                                string.Empty,
+                                string.Empty,
+                                string.Empty,
+                                string.Empty,
+                                string.Empty,
+                                string.Empty,
+                                string.Empty,
+                                string.Empty,
+                                string.Empty,
+                                string.Empty,
+                                string.Empty,
+                                string.Empty,
+                                string.Empty,
+                                string.Empty,
+                                0,
+                                0,
+                                0,
+                                0,
+                                x.imageUrl,
+                                string.Empty,
+                                false,
+                                string.Empty,
+                                string.Empty,
+                                false,
+                                x.dynamicmodifiers.SelectMany(modifier => modifier.modifiers).Where(t => t.selections.Where(u => u.IsCheck == true).Count() > 0).Select(y => new ApiModel.FnBOrders.Response.Modifier
+                                {
+                                    Subtotal = y.selections.First().price,
+                                    SalesItemId = salesItem,
+                                    ItemId = y.selections.First().itemId,
+                                    Quantity = y.selections.Where(a => a.itemId == y.selections.Where(t => t.IsCheck == true).Select(u => u.itemId).FirstOrDefault()).Select(b => b.IsCheck).FirstOrDefault() ? 1 : 0,
+                                    ShippedQuantity = y.selections.Where(a => a.itemId == y.selections.Where(t => t.IsCheck == true).Select(u => u.itemId).FirstOrDefault()).Select(b => b.IsCheck).FirstOrDefault() ? 1 : 0,
+                                    Price = y.selections.First().price,
+                                    DiscountPercentage = 0,
+                                    DiscountAmount = 0,
+                                    IsPrint = false,
+                                    SubTotal = y.selections.First().price,
+                                    MgstTaxAmount = y.selections.First().price * 0.06,
+                                    TotalTaxAmount = y.selections.First().price * 0.06,
+                                    IsInclusiveMgst = true,
+                                    IsServiceItem = false,
+                                    AdditionalTaxPercentage1 = 0,
+                                    AdditionalTaxPercentage2 = 0,
+                                    AdditionalTaxAmount1 = 0,
+                                    AdditionalTaxAmount2 = 0,
+                                    IsVoucherItem = false,
+                                    IsPromoDiscountItem = false
+                                }).ToList()));
 
-                //                }).ToList()
-
-                //                )));
-
-
+                });
+            
                 Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger GetLastestOrderList Done ..."), _TraceCategory);
             }
             catch (Exception ex)
@@ -7640,7 +7608,7 @@ Batch Amount: {5}
         string _CardBizCardProcessState = string.Empty;
 
         //ApiModel.InitialOrder.Response initialOrderResponse = null;
-        Order.OrderRequest intialOrderRequest;
+        //Order.OrderRequest intialOrderRequest;
 
         RazerPayIntegration razerPay = new RazerPayIntegration();
         RazerPaymentResponse printRazerResponse = null;

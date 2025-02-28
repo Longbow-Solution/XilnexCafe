@@ -8,7 +8,6 @@ using System.Diagnostics;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Threading;
-using AnWRestAPI.Models;
 using System.Threading;
 using System.Windows.Media.Imaging;
 using System.IO;
@@ -765,6 +764,32 @@ namespace CFSSK.API
         {
             public class Request
             {
+                public Request(int salesNo, double totalAmount, double roundingAmount, double mgstTaxAmount, double billTaxPercentage, double serviceChargeAmount, string customerId, string salesOutlet, string salesType, int paxNo, bool isPrint, string orderSource, DateTime pickupTime, string recipientContact, double totalDiscountAmount, double totalAmountBeforeTax, long recipientContactTel, double billDiscountAmount, double billTaxAmount, double serviceChargeAmountAfterTax, bool postStatus, List<SalesItem> salesItems)
+                {
+                    SalesNo = salesNo;
+                    TotalAmount = totalAmount;
+                    RoundingAmount = roundingAmount;
+                    MgstTaxAmount = mgstTaxAmount;
+                    BillTaxPercentage = billTaxPercentage;
+                    ServiceChargeAmount = serviceChargeAmount;
+                    CustomerId = customerId;
+                    SalesOutlet = salesOutlet;
+                    SalesType = salesType;
+                    PaxNo = paxNo;
+                    IsPrint = isPrint;
+                    OrderSource = orderSource;
+                    PickupTime = pickupTime;
+                    RecipientContact = recipientContact;
+                    TotalDiscountAmount = totalDiscountAmount;
+                    TotalAmountBeforeTax = totalAmountBeforeTax;
+                    RecipientContactTel = recipientContactTel;
+                    BillDiscountAmount = billDiscountAmount;
+                    BillTaxAmount = billTaxAmount;
+                    ServiceChargeAmountAfterTax = serviceChargeAmountAfterTax;
+                    PostStatus = postStatus;
+                    SalesItems = salesItems;
+                }
+
                 public int SalesNo { get; set; }
                 public double TotalAmount { get; set; }
                 public double RoundingAmount { get; set; }
@@ -917,6 +942,63 @@ namespace CFSSK.API
 
                 public class SalesItem
                 {
+                    public SalesItem(int salesItemId, int itemId, string itemCode, string itemName, int quantity, int shippedQuantity, double price, double discountPercentage, double discountAmount, string remark, bool isPrint, string salesPerson, double subTotal, double mgstTaxAmount, double totalTaxAmount, bool isInclusiveMgst, string orderSource, double mgstTaxPercentage, bool isServiceItem, string deliveryType, string discountRemark, string brand, string itemType, string ruleName, string customField1, string customField2, string customField3, string customField4, string customField5, string customField6, string customField7, string customField8, string customField9, string customField10, string customField11, string customField12, string customField13, string customField14, string customField15, string customField16, string customField17, string customField18, double additionalTaxPercentage1, double additionalTaxPercentage2, double additionalTaxAmount1, double additionalTaxAmount2, string itemImageURL, string scanCode, bool isVoucherItem, string matrixBarcode, string promoCode, bool isPromoDiscountItem, List<Modifier> modifiers)
+                    {
+                        SalesItemId = salesItemId;
+                        ItemId = itemId;
+                        ItemCode = itemCode;
+                        ItemName = itemName;
+                        Quantity = quantity;
+                        ShippedQuantity = shippedQuantity;
+                        Price = price;
+                        DiscountPercentage = discountPercentage;
+                        DiscountAmount = discountAmount;
+                        Remark = remark;
+                        IsPrint = isPrint;
+                        SalesPerson = salesPerson;
+                        SubTotal = subTotal;
+                        MgstTaxAmount = mgstTaxAmount;
+                        TotalTaxAmount = totalTaxAmount;
+                        IsInclusiveMgst = isInclusiveMgst;
+                        OrderSource = orderSource;
+                        MgstTaxPercentage = mgstTaxPercentage;
+                        IsServiceItem = isServiceItem;
+                        DeliveryType = deliveryType;
+                        DiscountRemark = discountRemark;
+                        Brand = brand;
+                        ItemType = itemType;
+                        RuleName = ruleName;
+                        CustomField1 = customField1;
+                        CustomField2 = customField2;
+                        CustomField3 = customField3;
+                        CustomField4 = customField4;
+                        CustomField5 = customField5;
+                        CustomField6 = customField6;
+                        CustomField7 = customField7;
+                        CustomField8 = customField8;
+                        CustomField9 = customField9;
+                        CustomField10 = customField10;
+                        CustomField11 = customField11;
+                        CustomField12 = customField12;
+                        CustomField13 = customField13;
+                        CustomField14 = customField14;
+                        CustomField15 = customField15;
+                        CustomField16 = customField16;
+                        CustomField17 = customField17;
+                        CustomField18 = customField18;
+                        AdditionalTaxPercentage1 = additionalTaxPercentage1;
+                        AdditionalTaxPercentage2 = additionalTaxPercentage2;
+                        AdditionalTaxAmount1 = additionalTaxAmount1;
+                        AdditionalTaxAmount2 = additionalTaxAmount2;
+                        ItemImageURL = itemImageURL;
+                        ScanCode = scanCode;
+                        IsVoucherItem = isVoucherItem;
+                        MatrixBarcode = matrixBarcode;
+                        PromoCode = promoCode;
+                        IsPromoDiscountItem = isPromoDiscountItem;
+                        Modifiers = modifiers;
+                    }
+
                     public int SalesItemId { get; set; }
                     public int ItemId { get; set; }
                     public string ItemCode { get; set; }
@@ -1025,7 +1107,7 @@ namespace CFSSK.API
                     public bool IsVoucherItem { get; set; }
                     public string MatrixBarcode { get; set; }
                     public string PromoCode { get; set; }
-                    public string IsPromoDiscountItem { get; set; }
+                    public bool IsPromoDiscountItem { get; set; }
                 }
             }
         }
