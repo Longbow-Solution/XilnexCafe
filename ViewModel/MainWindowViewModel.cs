@@ -3786,9 +3786,9 @@ Batch Amount: {5}
             }
         }
 
-        private List<ApiModel.FnBOrders.Response.SalesItem> _Order;
+        private List<ApiModel.FnBOrders.Request.SalesItem> _Order;
 
-        public List<ApiModel.FnBOrders.Response.SalesItem> Order
+        public List<ApiModel.FnBOrders.Request.SalesItem> Order
         {
             get { return _Order; }
             set
@@ -5231,7 +5231,28 @@ Batch Amount: {5}
 
                 orderRequest =new ApiModel.FnBOrders.Request 
                         (
-                            
+                            0,
+                            CartList.Sum(x=>x.ItemTotalPrice),
+                            0,
+                            CartList.Sum(x => x.ItemTotalPrice)*0.06,
+                            6,
+                            0,
+                            string.Empty,
+                            "a908bee656684f10889a027cc38a0737",
+                            dineMethod,
+                            1,
+                            false,
+                            "XILNEXBYOD",
+                            DateTime.Now,
+                            string.Empty,
+                            0,
+                            CartList.Sum(x=>x.ItemTotalPrice)-(CartList.Sum(y=>y.ItemTotalPrice)*0.06),
+                            string.Empty,
+                            0,
+                            CartList.Sum(x=>x.ItemTotalPrice)*0.06,
+                            0,
+                            false,
+                            Order
                             );
 
                 //CartItem = CartList.Select(x => x.ItemCurrentQty).Sum();
@@ -6728,29 +6749,29 @@ Batch Amount: {5}
             {
                 _PaymentCategoryName = "";
                 _PaymentCategoryName = "NA";
-                if (InitialOrder("PF"))
-                {
-                    ShowLoading = Visibility.Collapsed;
-                    //if (initialOrderResponse != null)
-                    //{
-                    //    intialOrderRequest.orderId = Convert.ToInt32(initialOrderResponse.OrderId);
-                    //    if (PostOrder(intialOrderRequest,"0" ,initialOrderResponse))
-                    //    {
-                    //        PrintReceipt(true, true, null, null);
-                    //    }
-                    //    else
-                    //    {
-                    //        PrintReceipt(true, false, null, null);
-                    //    }
-                    //}
-                }
-                else
-                {
-                    ShowLoading = Visibility.Collapsed;
-                    TxtErrorHeader = Lbl_Error;
-                    TxtErrorMessage = Lbl_ErrorTryAgain;
-                    WarningMessageBoxVisibility = Visibility.Visible;
-                }
+                //if (InitialOrder("PF"))
+                //{
+                //    ShowLoading = Visibility.Collapsed;
+                //    //if (initialOrderResponse != null)
+                //    //{
+                //    //    intialOrderRequest.orderId = Convert.ToInt32(initialOrderResponse.OrderId);
+                //    //    if (PostOrder(intialOrderRequest,"0" ,initialOrderResponse))
+                //    //    {
+                //    //        PrintReceipt(true, true, null, null);
+                //    //    }
+                //    //    else
+                //    //    {
+                //    //        PrintReceipt(true, false, null, null);
+                //    //    }
+                //    //}
+                //}
+                //else
+                //{
+                //    ShowLoading = Visibility.Collapsed;
+                //    TxtErrorHeader = Lbl_Error;
+                //    TxtErrorMessage = Lbl_ErrorTryAgain;
+                //    WarningMessageBoxVisibility = Visibility.Visible;
+                //}
             }
             catch (Exception ex)
             {
@@ -7214,78 +7235,33 @@ Batch Amount: {5}
             {
                 Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger GetLastestOrderList Starting ..."), _TraceCategory);
 
-                Order = new List<ApiModel.FnBOrders.Response.SalesItem>();
+                Order = new List<ApiModel.FnBOrders.Request.SalesItem>();
 
                 CartList.ToList().ForEach(x =>
                 {
                     int salesItem = x.itemId;
-                    Order.Add(new ApiModel.FnBOrders.Response.SalesItem(
-                                x.itemId,
-                                x.itemId,
-                                x.itemCode,
-                                x.itemName,
-                                x.ItemCurrentQty,
-                                x.ItemCurrentQty,
-                                x.price,
-                                0,
-                                0,
-                                string.Empty,
-                                false,
-                                string.Empty,
-                                x.ItemTotalPrice,
-                                x.price * 0.06,
-                                x.ItemTotalPrice * 0.06,
-                                true,
-                                "XILNEXBYODSALES",
-                                6,
-                                false,
-                                string.Empty,
-                                string.Empty,
-                                string.Empty,
-                                x.itemType,
-                                string.Empty,
-                                string.Empty,
-                                string.Empty,
-                                string.Empty,
-                                string.Empty,
-                                string.Empty,
-                                string.Empty,
-                                string.Empty,
-                                string.Empty,
-                                string.Empty,
-                                string.Empty,
-                                string.Empty,
-                                string.Empty,
-                                string.Empty,
-                                string.Empty,
-                                string.Empty,
-                                string.Empty,
-                                string.Empty,
-                                string.Empty,
-                                0,
-                                0,
-                                0,
-                                0,
-                                x.imageUrl,
-                                string.Empty,
-                                false,
-                                string.Empty,
-                                string.Empty,
-                                false,
-                                x.dynamicmodifiers.SelectMany(modifier => modifier.modifiers).Where(t => t.selections.Where(u => u.IsCheck == true).Count() > 0).Select(y => new ApiModel.FnBOrders.Response.Modifier
+                    List<ApiModel.FnBOrders.Request.Modifier> modifier = new List<ApiModel.FnBOrders.Request.Modifier>();
+
+                    if (x.dynamicmodifiers.SelectMany(modifierzz => modifierzz.modifiers).Count() > 0)
+                    {
+                        x.dynamicmodifiers.SelectMany(modifierss => modifierss.modifiers).ToList().ForEach(z =>
+                        {
+                            if (z.selections.Count > 0)
+                            {
+                                ApiModel.FnBOrders.Request.Modifier tempMod = new ApiModel.FnBOrders.Request.Modifier
                                 {
-                                    Subtotal = y.selections.First().price,
+                                    Subtotal = z.selections.FirstOrDefault().DOUBLE_Sale_Price,
                                     SalesItemId = salesItem,
-                                    ItemId = y.selections.First().itemId,
-                                    Quantity = y.selections.Where(a => a.itemId == y.selections.Where(t => t.IsCheck == true).Select(u => u.itemId).FirstOrDefault()).Select(b => b.IsCheck).FirstOrDefault() ? 1 : 0,
-                                    ShippedQuantity = y.selections.Where(a => a.itemId == y.selections.Where(t => t.IsCheck == true).Select(u => u.itemId).FirstOrDefault()).Select(b => b.IsCheck).FirstOrDefault() ? 1 : 0,
-                                    Price = y.selections.First().price,
+                                    ItemId = z.selections.FirstOrDefault().itemId,
+                                    Quantity = 1,
+                                    ShippedQuantity = 1,
+                                    Price = z.selections.FirstOrDefault().DOUBLE_Sale_Price,
                                     DiscountPercentage = 0,
                                     DiscountAmount = 0,
                                     IsPrint = false,
-                                    SubTotal = y.selections.First().price,
-                                    MgstTaxAmount = y.selections.First().price * 0.06,
-                                    TotalTaxAmount = y.selections.First().price * 0.06,
+                                    SubTotal = z.selections.FirstOrDefault().DOUBLE_Sale_Price,
+                                    MgstTaxAmount = z.selections.FirstOrDefault().DOUBLE_Sale_Price * 0.06,
+                                    TotalTaxAmount = z.selections.FirstOrDefault().DOUBLE_Sale_Price * 0.06,
                                     IsInclusiveMgst = true,
                                     IsServiceItem = false,
                                     AdditionalTaxPercentage1 = 0,
@@ -7294,8 +7270,35 @@ Batch Amount: {5}
                                     AdditionalTaxAmount2 = 0,
                                     IsVoucherItem = false,
                                     IsPromoDiscountItem = false
-                                }).ToList()));
+                                };
 
+                                modifier.Add(tempMod);
+                            }
+                        });
+                    }
+
+                    Order.Add(new ApiModel.FnBOrders.Request.SalesItem(
+                                x.itemId,
+                                x.itemId,
+                                x.ItemCurrentQty,
+                                x.ItemCurrentQty,
+                                x.price,
+                                0,
+                                0,
+                                false,
+                                x.ItemTotalPrice,
+                                x.price * 0.06,
+                                x.ItemTotalPrice * 0.06,
+                                true,
+                                true,
+                                0,
+                                0,
+                                0,
+                                0,
+                                false,
+                                false,
+                                modifier
+                                ));
                 });
             
                 Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger GetLastestOrderList Done ..."), _TraceCategory);
@@ -7381,81 +7384,81 @@ Batch Amount: {5}
             }
         }
 
-        public bool VoucherCheck()
-        {
-            bool success = false;
-            try
-            {
-                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger VoucherCheck Starting ..."), _TraceCategory);
+        //public bool VoucherCheck()
+        //{
+        //    bool success = false;
+        //    try
+        //    {
+        //        Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger VoucherCheck Starting ..."), _TraceCategory);
 
-                GetLastestOrderList();
-                CalculateTotalItem();
+        //        GetLastestOrderList();
+        //        CalculateTotalItem();
 
-                orderRequest.payment = new Order.OrderPayment(19, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, orderRequest.paymentTotal, string.Empty);
+        //        orderRequest.payment = new Order.OrderPayment(19, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, orderRequest.paymentTotal, string.Empty);
 
-                //ApiModel.AutoReviewOrder.Request req = new ApiModel.AutoReviewOrder.Request(CustomerID, AccessToken, orderRequest, GeneralVar.ComponentId, GeneralVar.ComponentUniqueId);
+        //        //ApiModel.AutoReviewOrder.Request req = new ApiModel.AutoReviewOrder.Request(CustomerID, AccessToken, orderRequest, GeneralVar.ComponentId, GeneralVar.ComponentUniqueId);
 
-                //if (_ApiFunc.AutoReviewOrder(req, out ApiModel.AutoReviewOrder.Response res))
-                //{
-                //    if (res.Code.Equals("00"))
-                //    {
-                //        success = true;
-                //        Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger VoucherCheck : Voucher remain the same"), _TraceCategory);
+        //        //if (_ApiFunc.AutoReviewOrder(req, out ApiModel.AutoReviewOrder.Response res))
+        //        //{
+        //        //    if (res.Code.Equals("00"))
+        //        //    {
+        //        //        success = true;
+        //        //        Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger VoucherCheck : Voucher remain the same"), _TraceCategory);
 
-                //        if (res.Message != null)
-                //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger VoucherCheck : {0}", res.Message.ToString()), _TraceCategory);
-                //    }
-                //    else if (res.Code.Equals("01"))
-                //    {
-                //        Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Info] Trigger VoucherCheck : Voucher have changes"), _TraceCategory);
-                //        if (res.PromotionToRemove != null)
-                //        {
-                //            if (res.PromotionToRemove.Count() > 0)
-                //            {
-                //                var voucherToRemove = res.PromotionToRemove.ToList();
+        //        //        if (res.Message != null)
+        //        //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger VoucherCheck : {0}", res.Message.ToString()), _TraceCategory);
+        //        //    }
+        //        //    else if (res.Code.Equals("01"))
+        //        //    {
+        //        //        Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Info] Trigger VoucherCheck : Voucher have changes"), _TraceCategory);
+        //        //        if (res.PromotionToRemove != null)
+        //        //        {
+        //        //            if (res.PromotionToRemove.Count() > 0)
+        //        //            {
+        //        //                var voucherToRemove = res.PromotionToRemove.ToList();
 
-                //                foreach (var voucher in voucherToRemove)
-                //                {
-                //                    //VoucherList.Where(x => int.Parse(x.RedeemTxId) == voucher.rewardTxId && int.Parse(x.RedeemId) == voucher.rewardSuperId).Select(y => y.IsCheck = false).ToList();
-                //                    Voucher.Remove(Voucher.Single(x => x.rewardTxId == Convert.ToInt32(voucher.rewardTxId) && x.rewardSuperId == voucher.rewardSuperId));
-                //                }
+        //        //                foreach (var voucher in voucherToRemove)
+        //        //                {
+        //        //                    //VoucherList.Where(x => int.Parse(x.RedeemTxId) == voucher.rewardTxId && int.Parse(x.RedeemId) == voucher.rewardSuperId).Select(y => y.IsCheck = false).ToList();
+        //        //                    Voucher.Remove(Voucher.Single(x => x.rewardTxId == Convert.ToInt32(voucher.rewardTxId) && x.rewardSuperId == voucher.rewardSuperId));
+        //        //                }
 
-                //                CalculateTotalItem();
-                //                TxtErrorHeader = Lbl_Info;
-                //                TxtErrorMessage = Lbl_CheckVoucher;
-                //                WarningMessageBoxVisibility = Visibility.Visible;
-                //            }
-                //        }
-                //        success = true;
-                //        if (res.Message != null)
-                //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Info] Trigger VoucherCheck : {0}", res.Message.ToString()), _TraceCategory);
-                //        else
-                //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Info] Trigger VoucherCheck : Menu have some changes"), _TraceCategory);
-                //    }
-                //    else if (res.Code.Equals("99"))
-                //    {
-                //        if (res.Message != null)
-                //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger VoucherCheck : {0}", res.Message.ToString()), _TraceCategory);
-                //        else
-                //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger VoucherCheck : Unknown Error"), _TraceCategory);
-                //    }
-                //    else
-                //    {
-                //        if (res.Message != null)
-                //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger VoucherCheck : {0}", res.Message.ToString()), _TraceCategory);
-                //        else
-                //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger VoucherCheck : Unknown Error"), _TraceCategory);
-                //    }
-                //}
+        //        //                CalculateTotalItem();
+        //        //                TxtErrorHeader = Lbl_Info;
+        //        //                TxtErrorMessage = Lbl_CheckVoucher;
+        //        //                WarningMessageBoxVisibility = Visibility.Visible;
+        //        //            }
+        //        //        }
+        //        //        success = true;
+        //        //        if (res.Message != null)
+        //        //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Info] Trigger VoucherCheck : {0}", res.Message.ToString()), _TraceCategory);
+        //        //        else
+        //        //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Info] Trigger VoucherCheck : Menu have some changes"), _TraceCategory);
+        //        //    }
+        //        //    else if (res.Code.Equals("99"))
+        //        //    {
+        //        //        if (res.Message != null)
+        //        //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger VoucherCheck : {0}", res.Message.ToString()), _TraceCategory);
+        //        //        else
+        //        //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger VoucherCheck : Unknown Error"), _TraceCategory);
+        //        //    }
+        //        //    else
+        //        //    {
+        //        //        if (res.Message != null)
+        //        //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger VoucherCheck : {0}", res.Message.ToString()), _TraceCategory);
+        //        //        else
+        //        //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger VoucherCheck : Unknown Error"), _TraceCategory);
+        //        //    }
+        //        //}
 
-                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger VoucherCheck Done ..."), _TraceCategory);
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger VoucherCheck : {0}", ex.ToString()), _TraceCategory);
-            }
-            return success;
-        }
+        //        Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger VoucherCheck Done ..."), _TraceCategory);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger VoucherCheck : {0}", ex.ToString()), _TraceCategory);
+        //    }
+        //    return success;
+        //}
         #endregion
         #endregion
 
@@ -7842,7 +7845,7 @@ Batch Amount: {5}
                 {
                     try
                     {
-                        bool initialOrderResult = InitialOrder(paymentMethod);
+                        //bool initialOrderResult = InitialOrder(paymentMethod);
 
                         //if (initialOrderResponse != null)
                         //{
@@ -7852,14 +7855,14 @@ Batch Amount: {5}
 
                         ShowLoading = Visibility.Collapsed;
 
-                        if (!initialOrderResult)
-                        {
-                            TxtErrorHeader = Lbl_Error;
-                            TxtErrorMessage = Lbl_ErrorAssist;
-                            WarningMessageBoxVisibility = Visibility.Visible;
-                            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, "Initial Order failed.", _TraceCategory);
-                            return;
-                        }
+                        //if (!initialOrderResult)
+                        //{
+                        //    TxtErrorHeader = Lbl_Error;
+                        //    TxtErrorMessage = Lbl_ErrorAssist;
+                        //    WarningMessageBoxVisibility = Visibility.Visible;
+                        //    Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, "Initial Order failed.", _TraceCategory);
+                        //    return;
+                        //}
 
                         switch (paymentMethod)
                         {
@@ -8030,7 +8033,7 @@ Batch Amount: {5}
 
                 if (cardBizLastSalesRequest != null)
                     cardBizLastSalesRequest = null;
-                cardBizLastSalesRequest = new Sales(GeneralVar.CC_PortName, logEnable);
+                cardBizLastSalesRequest = new Sales(GeneralVar.CC_PortName, true);
 
                 cardBizLastSalesResponse = new Sales_Resp();
 
@@ -8696,12 +8699,12 @@ END - CreditCardApprovedDetails ****************************************",
                     _PaymentCategoryName = "DUITNOW";
                 }
 
-                orderRequest.paymentType = KioskPaymentType.Where(x => x.PaymentName.Replace(" ", "").ToUpper() == _PaymentCategoryName.Trim().ToUpper()).Select(y => y.PaymentId).FirstOrDefault().ToString();
-                orderRequest.payment.paymentTypeId = KioskPaymentType.Where(x => x.PaymentName.Replace(" ", "").ToUpper() == _PaymentCategoryName.Trim().ToUpper()).Select(y => y.PaymentId).FirstOrDefault();
+                //orderRequest.paymentType = KioskPaymentType.Where(x => x.PaymentName.Replace(" ", "").ToUpper() == _PaymentCategoryName.Trim().ToUpper()).Select(y => y.PaymentId).FirstOrDefault().ToString();
+                //orderRequest.payment.paymentTypeId = KioskPaymentType.Where(x => x.PaymentName.Replace(" ", "").ToUpper() == _PaymentCategoryName.Trim().ToUpper()).Select(y => y.PaymentId).FirstOrDefault();
 
                 Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, string.Format("PreparePaymentInformationEWallet _PaymentCategoryId = {0}", _PaymentCategoryId), _TraceCategory);
                 Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, string.Format("PreparePaymentInformationEWallet _PaymentCategoryName = {0}", _PaymentCategoryName), _TraceCategory);
-                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, string.Format("PreparePaymentInformationEWallet PaymentId = {0}", orderRequest.paymentType), _TraceCategory);
+                //Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, string.Format("PreparePaymentInformationEWallet PaymentId = {0}", orderRequest.paymentType), _TraceCategory);
 
                 Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, string.Format("PreparePaymentInformationEWallet Completed."), _TraceCategory);
             }
@@ -8750,13 +8753,13 @@ END - CreditCardApprovedDetails ****************************************",
                         break;
                 }
 
-                orderRequest.paymentType = KioskPaymentType.Where(x => x.PaymentName.Replace(" ", "").ToUpper() == _PaymentCategoryName.Trim().ToUpper()).Select(y => y.PaymentId).FirstOrDefault().ToString();
-                orderRequest.payment.paymentTypeId = KioskPaymentType.Where(x => x.PaymentName.Replace(" ", "").ToUpper() == _PaymentCategoryName.Trim().ToUpper()).Select(y => y.PaymentId).FirstOrDefault();
+                //orderRequest.paymentType = KioskPaymentType.Where(x => x.PaymentName.Replace(" ", "").ToUpper() == _PaymentCategoryName.Trim().ToUpper()).Select(y => y.PaymentId).FirstOrDefault().ToString();
+                //orderRequest.payment.paymentTypeId = KioskPaymentType.Where(x => x.PaymentName.Replace(" ", "").ToUpper() == _PaymentCategoryName.Trim().ToUpper()).Select(y => y.PaymentId).FirstOrDefault();
 
 
                 Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, string.Format("PreparePaymentInformationCard _PaymentCategoryId = {0}", _PaymentCategoryId), _TraceCategory);
                 Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, string.Format("PreparePaymentInformationCard _PaymentCategoryName = {0}", _PaymentCategoryName), _TraceCategory);
-                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, string.Format("PreparePaymentInformationCard PaymentId = {0}", orderRequest.paymentType), _TraceCategory);
+                //Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, string.Format("PreparePaymentInformationCard PaymentId = {0}", orderRequest.paymentType), _TraceCategory);
 
                 Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, string.Format("PreparePaymentInformationCard Completed."), _TraceCategory);
             }
@@ -8876,197 +8879,197 @@ END - CreditCardApprovedDetails ****************************************",
             }
         }
 
-        bool InitialOrder(string paymentMethod)
-        {
-            bool success = false;
-            try
-            {
-                if (orderRequest.paymentTotal == 0)
-                    paymentId = KioskPaymentType.Where(x => x.PaymentGroup.ToUpper() == "PF").Select(y => y.PaymentId).FirstOrDefault();
-                else
-                {
-                    switch (paymentMethod)
-                    {
-                        case "DUITNOW":
-                        case "UNION":
-                        case "ALIPAY":
-                        case "ALIPAY+":
-                        case "WECHAT":
-                            paymentId = KioskPaymentType.Where(x => x.PaymentGroup.ToUpper() == "KEW").Select(y => y.PaymentId).FirstOrDefault();
-                            break;
-                        case "KCC":
-                            paymentId = KioskPaymentType.Where(x => x.PaymentGroup.ToUpper() == paymentMethod).Select(y => y.PaymentId).FirstOrDefault();
-                            break;
-                    }
-                }
+        //bool InitialOrder(string paymentMethod)
+        //{
+        //    bool success = false;
+        //    try
+        //    {
+        //        if (orderRequest.paymentTotal == 0)
+        //            paymentId = KioskPaymentType.Where(x => x.PaymentGroup.ToUpper() == "PF").Select(y => y.PaymentId).FirstOrDefault();
+        //        else
+        //        {
+        //            switch (paymentMethod)
+        //            {
+        //                case "DUITNOW":
+        //                case "UNION":
+        //                case "ALIPAY":
+        //                case "ALIPAY+":
+        //                case "WECHAT":
+        //                    paymentId = KioskPaymentType.Where(x => x.PaymentGroup.ToUpper() == "KEW").Select(y => y.PaymentId).FirstOrDefault();
+        //                    break;
+        //                case "KCC":
+        //                    paymentId = KioskPaymentType.Where(x => x.PaymentGroup.ToUpper() == paymentMethod).Select(y => y.PaymentId).FirstOrDefault();
+        //                    break;
+        //            }
+        //        }
 
 
-                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger thPayment Starting ..."), _TraceCategory);
-                payment = new Order.OrderPayment(paymentId, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, orderRequest.paymentTotal, string.Empty);
+        //        Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger thPayment Starting ..."), _TraceCategory);
+        //        payment = new Order.OrderPayment(paymentId, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, orderRequest.paymentTotal, string.Empty);
 
-                CalculateTotalItem();
+        //        CalculateTotalItem();
 
-                intialOrderRequest = new Order.OrderRequest
-                (
-                    orderRequest.txId,
-                    orderRequest.orderId,
-                    orderRequest.clientId,
-                    orderRequest.mobileNo,
-                    orderRequest.branchId,
-                    orderRequest.addressId,
-                    orderRequest.channelType,
-                    orderRequest.orderDateTime,
-                    orderRequest.collectionDateTime,
-                    orderRequest.deliveryDateTime,
-                    orderRequest.carPlateNo,
-                    orderRequest.cutlery,
-                    orderRequest.orderRemark,
-                    paymentId.ToString(),//payment Type
-                    orderRequest.subTotal,
-                    orderRequest.tax,
-                    orderRequest.serviceCharge,
-                    orderRequest.deliveryFee,
-                    orderRequest.deliveryDiscount,
-                    orderRequest.discount,
-                    orderRequest.total,
-                    orderRequest.rounding,
-                    orderRequest.paymentTotal,
-                    orderRequest.tenderTotal,
-                    orderRequest.EntityCId,
-                    orderRequest.Ogi,
-                    orderRequest.noteToRider,
-                    orderRequest.displayNumber,
-                    orderRequest.promoTxId,
-                    orderRequest.voucherTxId,
-                    orderRequest.orderMenuList,
-                    orderRequest.payment,
-                    orderRequest.vouchers
-                    );
+        //        intialOrderRequest = new Order.OrderRequest
+        //        (
+        //            orderRequest.txId,
+        //            orderRequest.orderId,
+        //            orderRequest.clientId,
+        //            orderRequest.mobileNo,
+        //            orderRequest.branchId,
+        //            orderRequest.addressId,
+        //            orderRequest.channelType,
+        //            orderRequest.orderDateTime,
+        //            orderRequest.collectionDateTime,
+        //            orderRequest.deliveryDateTime,
+        //            orderRequest.carPlateNo,
+        //            orderRequest.cutlery,
+        //            orderRequest.orderRemark,
+        //            paymentId.ToString(),//payment Type
+        //            orderRequest.subTotal,
+        //            orderRequest.tax,
+        //            orderRequest.serviceCharge,
+        //            orderRequest.deliveryFee,
+        //            orderRequest.deliveryDiscount,
+        //            orderRequest.discount,
+        //            orderRequest.total,
+        //            orderRequest.rounding,
+        //            orderRequest.paymentTotal,
+        //            orderRequest.tenderTotal,
+        //            orderRequest.EntityCId,
+        //            orderRequest.Ogi,
+        //            orderRequest.noteToRider,
+        //            orderRequest.displayNumber,
+        //            orderRequest.promoTxId,
+        //            orderRequest.voucherTxId,
+        //            orderRequest.orderMenuList,
+        //            orderRequest.payment,
+        //            orderRequest.vouchers
+        //            );
 
                 
 
-                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger thPayment Done ..."), _TraceCategory);
-                success = true;
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger thPayment Error - {0}", ex.ToString()), _TraceCategory);
-            }
+        //        Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger thPayment Done ..."), _TraceCategory);
+        //        success = true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger thPayment Error - {0}", ex.ToString()), _TraceCategory);
+        //    }
 
-            return success;
-        }
+        //    return success;
+        //}
 
-        bool PostOrder(Order.OrderRequest iOrderRequest,string paymentTxId)
-        {
-            bool success = false;
-            //try
-            //{
-            //    if (iOrderResponse.Code.Equals("00"))
-            //    {
-            //        ShowSendingKitchen = Visibility.Visible;
-            //        Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Initial Order Success..."), _TraceCategory);
-            //        ApiModel.PostOrder.Request postOrderRequest = new ApiModel.PostOrder.Request(iOrderRequest, paymentTxId, GeneralVar.ComponentId, GeneralVar.ComponentUniqueId);
+        //bool PostOrder(,string paymentTxId)
+        //{
+        //    bool success = false;
+        //    //try
+        //    //{
+        //    //    if (iOrderResponse.Code.Equals("00"))
+        //    //    {
+        //    //        ShowSendingKitchen = Visibility.Visible;
+        //    //        Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Initial Order Success..."), _TraceCategory);
+        //    //        ApiModel.PostOrder.Request postOrderRequest = new ApiModel.PostOrder.Request(iOrderRequest, paymentTxId, GeneralVar.ComponentId, GeneralVar.ComponentUniqueId);
 
-            //        if (_ApiFunc.PostKioskOrder(postOrderRequest, out ApiModel.PostOrder.Response postOrderRes))
-            //        {
-            //            if (postOrderRes.Code.Equals("00"))
-            //            {
-            //                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Post Order Success..."), _TraceCategory);
-            //                OrderNum = postOrderRes.DisplayOrderNumber;
-            //                EarnPoint = postOrderRes.EarnPoints;
-            //                ShowSendingKitchen = Visibility.Collapsed;
-            //            }
-            //            else if (postOrderRes.Code.Equals("01") || postOrderRes.Code.Equals("10"))
-            //            {
-            //                if (postOrderRes.Message != null)
-            //                    Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger PostKioskOrder : {0}", postOrderRes.Message.ToString()), _TraceCategory);
-            //                else
-            //                    Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger PostKioskOrder : Unknown Error"), _TraceCategory);
-            //                throw new Exception("Post Order Fail");
-            //            }
-            //            else if (postOrderRes.Code.Equals("99"))
-            //            {
-            //                if (postOrderRes.Message != null)
-            //                    Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger PostKioskOrder : {0}", postOrderRes.Message.ToString()), _TraceCategory);
-            //                else
-            //                    Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger PostKioskOrder : Unknown Error"), _TraceCategory);
-            //                throw new Exception("Post Order Fail");
-            //            }
-            //        }
+        //    //        if (_ApiFunc.PostKioskOrder(postOrderRequest, out ApiModel.PostOrder.Response postOrderRes))
+        //    //        {
+        //    //            if (postOrderRes.Code.Equals("00"))
+        //    //            {
+        //    //                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Post Order Success..."), _TraceCategory);
+        //    //                OrderNum = postOrderRes.DisplayOrderNumber;
+        //    //                EarnPoint = postOrderRes.EarnPoints;
+        //    //                ShowSendingKitchen = Visibility.Collapsed;
+        //    //            }
+        //    //            else if (postOrderRes.Code.Equals("01") || postOrderRes.Code.Equals("10"))
+        //    //            {
+        //    //                if (postOrderRes.Message != null)
+        //    //                    Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger PostKioskOrder : {0}", postOrderRes.Message.ToString()), _TraceCategory);
+        //    //                else
+        //    //                    Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger PostKioskOrder : Unknown Error"), _TraceCategory);
+        //    //                throw new Exception("Post Order Fail");
+        //    //            }
+        //    //            else if (postOrderRes.Code.Equals("99"))
+        //    //            {
+        //    //                if (postOrderRes.Message != null)
+        //    //                    Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger PostKioskOrder : {0}", postOrderRes.Message.ToString()), _TraceCategory);
+        //    //                else
+        //    //                    Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger PostKioskOrder : Unknown Error"), _TraceCategory);
+        //    //                throw new Exception("Post Order Fail");
+        //    //            }
+        //    //        }
 
-            //        if (iOrderResponse.Message != null)
-            //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger InitialKioskOrder : {0}", iOrderResponse.Message.ToString()), _TraceCategory);
-            //    }
-            //    else if (iOrderResponse.Code.Equals("02"))
-            //    {
-            //        if (iOrderResponse.Message != null)
-            //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger InitialKioskOrder : {0}", iOrderResponse.Message.ToString()), _TraceCategory);
-            //        else
-            //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger InitialKioskOrder : Unknown Error from API"), _TraceCategory);
+        //    //        if (iOrderResponse.Message != null)
+        //    //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger InitialKioskOrder : {0}", iOrderResponse.Message.ToString()), _TraceCategory);
+        //    //    }
+        //    //    else if (iOrderResponse.Code.Equals("02"))
+        //    //    {
+        //    //        if (iOrderResponse.Message != null)
+        //    //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger InitialKioskOrder : {0}", iOrderResponse.Message.ToString()), _TraceCategory);
+        //    //        else
+        //    //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger InitialKioskOrder : Unknown Error from API"), _TraceCategory);
 
-            //        if (iOrderResponse.InvalidMenus.Count() > 0 && iOrderResponse.InvalidMenus != null)
-            //        {
-            //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Info] InvalidMenus return : {0}", iOrderResponse.InvalidMenus.Count() > 0), _TraceCategory);
-            //            foreach (var invalidMenu in iOrderResponse.InvalidMenus)
-            //            {
-            //                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Info] InvalidMenus : Found {0} of {1} in cart", CartList.Where(x => x.itemId == Convert.ToInt32(invalidMenu.itemId)).ToList().Count(), invalidMenu.itemName), _TraceCategory);
-            //                foreach (var menu in CartList.Where(x => x.itemId == Convert.ToInt32(invalidMenu.itemId)).ToList())
-            //                {
-            //                    menu.DeleteItem();
-            //                    Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Info] InvalidMenus : {0} removed.", menu.itemName), _TraceCategory);
-            //                }
-            //            }
-            //            TxtErrorHeader = Lbl_Info;
-            //            TxtErrorMessage = Lbl_InvalidMenu;
-            //            WarningMessageBoxVisibility = Visibility.Visible;
-            //        }
-            //        throw new Exception("Initial Order Fail");
-            //    }
-            //    else if (iOrderResponse.Code.Equals("01") || iOrderResponse.Code.Equals("10"))
-            //    {
-            //        if (iOrderResponse.Message != null)
-            //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger InitialKioskOrder : {0}", iOrderResponse.Message.ToString()), _TraceCategory);
-            //        else
-            //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger InitialKioskOrder : Unknown Error from API"), _TraceCategory);
-            //        throw new Exception("Initial Order Fail");
-            //    }
-            //    else if (iOrderResponse.Code.Equals("99"))
-            //    {
-            //        if (iOrderResponse.Message != null)
-            //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger InitialKioskOrder : {0}", iOrderResponse.Message.ToString()), _TraceCategory);
-            //        else
-            //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger InitialKioskOrder : Unknown Error from API"), _TraceCategory);
-            //        throw new Exception("Initial Order Fail");
-            //    }
-            //    else
-            //    {
-            //        if (iOrderResponse.Message != null)
-            //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger InitialKioskOrder : {0}", iOrderResponse.Message.ToString()), _TraceCategory);
-            //        else
-            //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger InitialKioskOrder : Unknown Error from API"), _TraceCategory);
-            //    }
+        //    //        if (iOrderResponse.InvalidMenus.Count() > 0 && iOrderResponse.InvalidMenus != null)
+        //    //        {
+        //    //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Info] InvalidMenus return : {0}", iOrderResponse.InvalidMenus.Count() > 0), _TraceCategory);
+        //    //            foreach (var invalidMenu in iOrderResponse.InvalidMenus)
+        //    //            {
+        //    //                Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Info] InvalidMenus : Found {0} of {1} in cart", CartList.Where(x => x.itemId == Convert.ToInt32(invalidMenu.itemId)).ToList().Count(), invalidMenu.itemName), _TraceCategory);
+        //    //                foreach (var menu in CartList.Where(x => x.itemId == Convert.ToInt32(invalidMenu.itemId)).ToList())
+        //    //                {
+        //    //                    menu.DeleteItem();
+        //    //                    Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Info] InvalidMenus : {0} removed.", menu.itemName), _TraceCategory);
+        //    //                }
+        //    //            }
+        //    //            TxtErrorHeader = Lbl_Info;
+        //    //            TxtErrorMessage = Lbl_InvalidMenu;
+        //    //            WarningMessageBoxVisibility = Visibility.Visible;
+        //    //        }
+        //    //        throw new Exception("Initial Order Fail");
+        //    //    }
+        //    //    else if (iOrderResponse.Code.Equals("01") || iOrderResponse.Code.Equals("10"))
+        //    //    {
+        //    //        if (iOrderResponse.Message != null)
+        //    //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger InitialKioskOrder : {0}", iOrderResponse.Message.ToString()), _TraceCategory);
+        //    //        else
+        //    //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger InitialKioskOrder : Unknown Error from API"), _TraceCategory);
+        //    //        throw new Exception("Initial Order Fail");
+        //    //    }
+        //    //    else if (iOrderResponse.Code.Equals("99"))
+        //    //    {
+        //    //        if (iOrderResponse.Message != null)
+        //    //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger InitialKioskOrder : {0}", iOrderResponse.Message.ToString()), _TraceCategory);
+        //    //        else
+        //    //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger InitialKioskOrder : Unknown Error from API"), _TraceCategory);
+        //    //        throw new Exception("Initial Order Fail");
+        //    //    }
+        //    //    else
+        //    //    {
+        //    //        if (iOrderResponse.Message != null)
+        //    //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger InitialKioskOrder : {0}", iOrderResponse.Message.ToString()), _TraceCategory);
+        //    //        else
+        //    //            Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceError, String.Format("[Error] Trigger InitialKioskOrder : Unknown Error from API"), _TraceCategory);
+        //    //    }
 
-            //    Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger Post Order Done ..."), _TraceCategory);
+        //    //    Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("Trigger Post Order Done ..."), _TraceCategory);
 
-            //    //waitforQRScan.Reset();
-            //    //waitforQRScan.WaitOne();
+        //    //    //waitforQRScan.Reset();
+        //    //    //waitforQRScan.WaitOne();
 
-            //    //Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
-            //    //{
-            //    //    SetStage(eStage.FinalPage);
-            //    //}));
+        //    //    //Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+        //    //    //{
+        //    //    //    SetStage(eStage.FinalPage);
+        //    //    //}));
 
-            //    //GeneralVar.DocumentPrint.Print_CardReceipt(Convert.ToDecimal(AnWTotalAmount), GeneralVar.ComponentCode, "--", dineMethod, CartList, null, 0m, 0, 0);
+        //    //    //GeneralVar.DocumentPrint.Print_CardReceipt(Convert.ToDecimal(AnWTotalAmount), GeneralVar.ComponentCode, "--", dineMethod, CartList, null, 0m, 0, 0);
 
-            //    success = true;
-            //}
-            //catch (Exception ex)
-            //{
-            //    Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("[Error] PostOrder = {0}", ex.ToString()), _TraceCategory);
-            //}
+        //    //    success = true;
+        //    //}
+        //    //catch (Exception ex)
+        //    //{
+        //    //    Trace.WriteLineIf(GeneralVar.SwcTraceLevel.TraceInfo, String.Format("[Error] PostOrder = {0}", ex.ToString()), _TraceCategory);
+        //    //}
 
-            return success;
-        }
+        //    return success;
+        //}
 
         #endregion
 

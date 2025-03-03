@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Diagnostics;
-using AnWRestAPI.Models;
 
 namespace CFSSK.API
 {

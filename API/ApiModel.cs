@@ -764,7 +764,7 @@ namespace CFSSK.API
         {
             public class Request
             {
-                public Request(int salesNo, double totalAmount, double roundingAmount, double mgstTaxAmount, double billTaxPercentage, double serviceChargeAmount, string customerId, string salesOutlet, string salesType, int paxNo, bool isPrint, string orderSource, DateTime pickupTime, string recipientContact, double totalDiscountAmount, double totalAmountBeforeTax, long recipientContactTel, double billDiscountAmount, double billTaxAmount, double serviceChargeAmountAfterTax, bool postStatus, List<SalesItem> salesItems)
+                public Request(int salesNo, double totalAmount, double roundingAmount, double mgstTaxAmount, double billTaxPercentage, double serviceChargeAmount, string customerId, string salesOutlet, string salesType, int paxNo, bool isPrint, string orderSource, DateTime pickupTime, string recipientContact, double totalDiscountAmount, double totalAmountBeforeTax, string recipientContactTel, double billDiscountAmount, double billTaxAmount, double serviceChargeAmountAfterTax, bool postStatus, List<SalesItem> salesItems)
                 {
                     SalesNo = salesNo;
                     TotalAmount = totalAmount;
@@ -806,7 +806,7 @@ namespace CFSSK.API
                 public string RecipientContact { get; set; }
                 public double TotalDiscountAmount { get; set; }
                 public double TotalAmountBeforeTax { get; set; }
-                public long RecipientContactTel { get; set; }
+                public string RecipientContactTel { get; set; }
                 public double BillDiscountAmount { get; set; }
                 public double BillTaxAmount { get; set; }
                 public double ServiceChargeAmountAfterTax { get; set; }
@@ -815,6 +815,30 @@ namespace CFSSK.API
 
                 public class SalesItem
                 {
+                    public SalesItem(int salesItemId, int itemId, int quantity, int shippedQuantity, double price, double discountPercentage, double discountAmount, bool isPrint, double subTotal, double mgstTaxAmount, double totalTaxAmount, bool isInclusiveMgst, bool isServiceItem, double additionalTaxPercentage1, double additionalTaxPercentage2, double additionalTaxAmount1, double additionalTaxAmount2, bool isVoucherItem, bool isPromoDiscountItem, List<Modifier> modifiers)
+                    {
+                        SalesItemId = salesItemId;
+                        ItemId = itemId;
+                        Quantity = quantity;
+                        ShippedQuantity = shippedQuantity;
+                        Price = price;
+                        DiscountPercentage = discountPercentage;
+                        DiscountAmount = discountAmount;
+                        IsPrint = isPrint;
+                        SubTotal = subTotal;
+                        MgstTaxAmount = mgstTaxAmount;
+                        TotalTaxAmount = totalTaxAmount;
+                        IsInclusiveMgst = isInclusiveMgst;
+                        IsServiceItem = isServiceItem;
+                        AdditionalTaxPercentage1 = additionalTaxPercentage1;
+                        AdditionalTaxPercentage2 = additionalTaxPercentage2;
+                        AdditionalTaxAmount1 = additionalTaxAmount1;
+                        AdditionalTaxAmount2 = additionalTaxAmount2;
+                        IsVoucherItem = isVoucherItem;
+                        IsPromoDiscountItem = isPromoDiscountItem;
+                        Modifiers = modifiers;
+                    }
+
                     public int SalesItemId { get; set; }
                     public int ItemId { get; set; }
                     public int Quantity { get; set; }
@@ -942,63 +966,6 @@ namespace CFSSK.API
 
                 public class SalesItem
                 {
-                    public SalesItem(int salesItemId, int itemId, string itemCode, string itemName, int quantity, int shippedQuantity, double price, double discountPercentage, double discountAmount, string remark, bool isPrint, string salesPerson, double subTotal, double mgstTaxAmount, double totalTaxAmount, bool isInclusiveMgst, string orderSource, double mgstTaxPercentage, bool isServiceItem, string deliveryType, string discountRemark, string brand, string itemType, string ruleName, string customField1, string customField2, string customField3, string customField4, string customField5, string customField6, string customField7, string customField8, string customField9, string customField10, string customField11, string customField12, string customField13, string customField14, string customField15, string customField16, string customField17, string customField18, double additionalTaxPercentage1, double additionalTaxPercentage2, double additionalTaxAmount1, double additionalTaxAmount2, string itemImageURL, string scanCode, bool isVoucherItem, string matrixBarcode, string promoCode, bool isPromoDiscountItem, List<Modifier> modifiers)
-                    {
-                        SalesItemId = salesItemId;
-                        ItemId = itemId;
-                        ItemCode = itemCode;
-                        ItemName = itemName;
-                        Quantity = quantity;
-                        ShippedQuantity = shippedQuantity;
-                        Price = price;
-                        DiscountPercentage = discountPercentage;
-                        DiscountAmount = discountAmount;
-                        Remark = remark;
-                        IsPrint = isPrint;
-                        SalesPerson = salesPerson;
-                        SubTotal = subTotal;
-                        MgstTaxAmount = mgstTaxAmount;
-                        TotalTaxAmount = totalTaxAmount;
-                        IsInclusiveMgst = isInclusiveMgst;
-                        OrderSource = orderSource;
-                        MgstTaxPercentage = mgstTaxPercentage;
-                        IsServiceItem = isServiceItem;
-                        DeliveryType = deliveryType;
-                        DiscountRemark = discountRemark;
-                        Brand = brand;
-                        ItemType = itemType;
-                        RuleName = ruleName;
-                        CustomField1 = customField1;
-                        CustomField2 = customField2;
-                        CustomField3 = customField3;
-                        CustomField4 = customField4;
-                        CustomField5 = customField5;
-                        CustomField6 = customField6;
-                        CustomField7 = customField7;
-                        CustomField8 = customField8;
-                        CustomField9 = customField9;
-                        CustomField10 = customField10;
-                        CustomField11 = customField11;
-                        CustomField12 = customField12;
-                        CustomField13 = customField13;
-                        CustomField14 = customField14;
-                        CustomField15 = customField15;
-                        CustomField16 = customField16;
-                        CustomField17 = customField17;
-                        CustomField18 = customField18;
-                        AdditionalTaxPercentage1 = additionalTaxPercentage1;
-                        AdditionalTaxPercentage2 = additionalTaxPercentage2;
-                        AdditionalTaxAmount1 = additionalTaxAmount1;
-                        AdditionalTaxAmount2 = additionalTaxAmount2;
-                        ItemImageURL = itemImageURL;
-                        ScanCode = scanCode;
-                        IsVoucherItem = isVoucherItem;
-                        MatrixBarcode = matrixBarcode;
-                        PromoCode = promoCode;
-                        IsPromoDiscountItem = isPromoDiscountItem;
-                        Modifiers = modifiers;
-                    }
-
                     public int SalesItemId { get; set; }
                     public int ItemId { get; set; }
                     public string ItemCode { get; set; }
